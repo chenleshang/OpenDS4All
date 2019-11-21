@@ -162,4 +162,4 @@ def data_loading(file, dbname='linkedin.db', filetype='url', LIMIT=100000):
     also_view_df.to_sql('also_view', conn, if_exists='replace', index=False)
     events_df.to_sql('events', conn, if_exists='replace', index=False)
 
-    return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df)
+    # return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df)
