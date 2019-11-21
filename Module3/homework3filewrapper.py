@@ -121,8 +121,13 @@ def data_loading(file, dbname, LIMIT=20000):
             pass
         
         i = i + 1
+
+        if(i % 10000 == 0):
+            print (i)
+            
         if i >= LIMIT:
             break
+
 
     people_df = get_df(pd.DataFrame(lines))
     names_df = get_df(pd.DataFrame(names))
