@@ -73,7 +73,7 @@ def extract_relation(rel, name):
                 ret.append(item)
     return ret
 
-def data_loading(file, dbname='linkedin.db', filetype='url', LIMIT=100000):
+def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=100000):
     # cwd = os.getcwd()
     # print(cwd)
     

@@ -73,7 +73,16 @@ def extract_relation(rel, name):
                 ret.append(item)
     return ret
     
-def data_loading(file, dbname, LIMIT=20000):
+def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
+
+    if(filetype == 'localpath'):
+        # linked_in = urllib.request.urlopen('file://' + cwd + '/' + file)
+        linked_in = open(file)
+    elif(filetype == 'localobj'):
+        linked_in = file
+    else: #URL
+        linked_in = urllib.request.urlopen(file)
+
     names = []
     people = []
     groups = []
@@ -124,7 +133,7 @@ def data_loading(file, dbname, LIMIT=20000):
 
         if(i % 10000 == 0):
             print (i)
-            
+
         if i >= LIMIT:
             break
 
@@ -153,3 +162,40 @@ def data_loading(file, dbname, LIMIT=20000):
     events_df.to_sql('events', conn, if_exists='replace', index=False)
 
     return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df)
+
+# TODO: Find the top 15 skills for data scientists (Pandas)
+
+def collect_peers(people_df_subset, skills_df, num):
+    # YOUR CODE HERE
+    ### BEGIN SOLUTION
+    people_skills_df = people_df_subset.merge(skills_df, left_on='_id', right_on='person')[['_id','industry','value']]
+
+    people_ids_df = people_df_subset[['_id']]
+    people_ids_df.loc[:,'_id2'] = 0
+
+    cartesian_df = people_ids_df.merge(people_ids_df,left_on='_id2',right_on='_id2')[['_id_x','_id_y']]
+    cartesian_df = cartesian_df[cartesian_df['_id_x'] != cartesian_df['_id_y']]
+    cartesian_df = cartesian_df.rename(columns={'_id_x': 'person_1', '_id_y': 'person_2'})
+
+    recs_df = people_skills_df.merge(cartesian_df, left_on='_id', right_on='person_1').merge(people_skills_df, left_on=['person_2','value'], right_on=['_id','value'])[['person_1','person_2','value']].\
+        groupby(by=['person_1','person_2']).count().reset_index().sort_values('value', ascending=False).head(num)
+
+    return recs_df.rename(columns={"value":"common_skills"})
+    ### BEGIN SOLUTION
+
+def collect_peers_w_subset(people_df, skills_df):
+    people_df_subset = people_df.head(100)
+    return collect_peers(people_df_subset, skills_df, 20)
+
+def last_job(experience_df):
+    # YOUR CODE HERE
+    ### BEGIN SOLUTION
+    return experience_df[experience_df['pos'] == '0'][['person','org','title']].sort_values('person')
+    ### END SOLUTION
+
+def recommend_jobs(recs_df, names_df, last_job_df):
+    # YOUR CODE HERE
+    ### BEGIN SOLUTION
+    return recs_df.merge(names_df,left_on='person_1',right_on='person')[['family_name','given_name','person_1','person_2']].\
+        merge(last_job_df,left_on='person_2',right_on='person', how="left")[['family_name','given_name','person_2','org','title']].sort_values('family_name')
+    ### END SOLUTION
