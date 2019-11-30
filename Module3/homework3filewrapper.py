@@ -148,7 +148,11 @@ def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
     also_view_df = get_df(pd.DataFrame(also_view))
     events_df = get_df(pd.DataFrame(events))
 
+    recs_df = collect_peers_w_subset(people_df, skills_df)
+    last_job_df = last_job(experience_df)
+
     conn = sqlite3.connect(dbname)
+
 
     # YOUR CODE HERE
     people_df.to_sql('people', conn, if_exists='replace', index=False)
@@ -161,7 +165,10 @@ def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
     also_view_df.to_sql('also_view', conn, if_exists='replace', index=False)
     events_df.to_sql('events', conn, if_exists='replace', index=False)
 
-    return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df)
+    recs_df.to_sql('recs', conn, if_exists='replace', index=False)
+    last_job_df.to_sql('lastjob', conn, if_exists='replace', index=False)
+
+    return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df, recs_df, last_job_df)
 
 # TODO: Find the top 15 skills for data scientists (Pandas)
 
