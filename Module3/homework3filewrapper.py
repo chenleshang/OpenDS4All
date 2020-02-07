@@ -168,7 +168,7 @@ def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
     recs_df.to_sql('recs', conn, if_exists='replace', index=False)
     last_job_df.to_sql('lastjob', conn, if_exists='replace', index=False)
 
-    return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df, recs_df, last_job_df, conn)
+    return (people_df, names_df, education_df, groups_df, skills_df, experience_df, honors_df, also_view_df, events_df, recs_df, last_job_df)
 
 # TODO: Find the top 15 skills for data scientists (Pandas)
 
