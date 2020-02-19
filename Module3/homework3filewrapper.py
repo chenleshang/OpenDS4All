@@ -98,7 +98,11 @@ def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
     i = 1
     # LIMIT = 20000  # Max records to parse
     for line in file:
-        line = line.decode('utf-8')
+        try:
+            line = line.decode('utf-8')
+        except:
+            line = line
+
         try:
             person = json.loads(line)
 
