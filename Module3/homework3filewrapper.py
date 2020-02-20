@@ -200,8 +200,9 @@ def collect_peers_w_subset(people_df, skills_df):
 
 def last_job(experience_df):
     # YOUR CODE HERE
+    # NOTE: limit the number of people returned, such that join ordering would make some sense here
     ### BEGIN SOLUTION
-    return experience_df[experience_df['pos'] == '0'][['person','org','title']].sort_values('person')
+    return experience_df[experience_df['pos'] == '0'][['person','org','title']].sort_values('person').head(5000)
     ### END SOLUTION
 
 def recommend_jobs(recs_df, names_df, last_job_df):
