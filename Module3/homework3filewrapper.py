@@ -95,7 +95,7 @@ def data_loading(file, dbname='linkedin.db', filetype='localobj', LIMIT=20000):
 
 
     lines = []
-    i = 1
+    i = 0
     # LIMIT = 20000  # Max records to parse
     for line in file:
         try:
